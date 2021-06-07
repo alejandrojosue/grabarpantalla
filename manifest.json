@@ -1,0 +1,13 @@
+{
+    "name": "Grabar",
+    "short_name": "Grabar",
+    "description": "Podras grabar la pantalla de tu computadora sin problemas",
+    "background_color": "rgb(47, 108, 240)",
+    "theme_color": "rgb(47, 108, 240)",
+    "orientation": "portrait",
+    "display": "standalone",
+    "start_url": "./?utm_source=web_app_manifest",
+    "scope": "./",
+    "lang": "es-MX"
+
+}
