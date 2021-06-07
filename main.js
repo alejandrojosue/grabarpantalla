@@ -1,14 +1,14 @@
 let empezar = document.querySelector('.empezar');
 let detener = document.querySelector('.detener');
 
-detener.style.display = 'none';
-
 const empezarGrabacion = async() => {
+
     const pantallaStream = await navigator.mediaDevices.getDisplayMedia({ video: true, audio: true })
     const usuarioStream = await navigator.mediaDevices.getUserMedia({ video: false, audio: true });
     const context = new AudioContext();
     const destination = context.createMediaStreamDestination();
     if (pantallaStream.getAudioTracks().length) {
+        console.log(pantallaStream.getAudioTracks().length);
         const fuente1 = context.createMediaStreamSource(pantallaStream);
         const f1Gain = context.createGain();
         f1Gain.gain.value = 1;
@@ -37,15 +37,12 @@ const empezarGrabacion = async() => {
         btnDescargar.download = `GRABACION_${new Date().getTime()}.mp4`;
         btnDescargar.click()
     };
-    detener.style.display = 'block';
-    empezar.style.display = 'none';
+    empezar.style.left = '-400px';
 }
 
 empezar.addEventListener('click', empezarGrabacion);
 
 
 detener.addEventListener('click', () => {
-    empezar.style.display = 'block';
-    detener.style.display = 'none';
     grabadora.stop()
 });
