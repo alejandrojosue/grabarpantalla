@@ -1,49 +1,86 @@
 * {
-    margin: 0;
     padding: 0;
-    box-sizing: border-box;
-    font-family: Arial, Helvetica, sans-serif;
+    margin: 0;
+    box-sizing: 0;
+    font-family: 'Segoe Print';
+    text-decoration: none;
 }
 
-.contenedor {
-    width: 70vw;
-    height: 100vh;
-    background-color: rgba(73, 131, 255, 0.973);
-    position: relative;
-    display: flex;
-    margin: 0 auto;
-    overflow: hidden;
+body {
+    background: rgb(47, 108, 240);
+    overflow-x: hidden;
 }
 
-button {
-    padding: 5px;
-    background: 0;
-    color: #fff;
-    font-weight: bold;
-    border: 2px solid #fff;
-    cursor: pointer;
-    border-radius: 5px;
+body::before {
+    content: '';
     position: absolute;
-    bottom: 15px;
-    left: 50%;
-    transform: translateX(-50%);
-}
-
-button:hover {
-    transform: scale(1.1) translateX(-50%);
-}
-
-div.imagen {
     width: 100%;
-    margin: 20px;
-    height: 80%;
+    height: 100%;
+    background-color: #fff;
+    opacity: .3;
+    clip-path: polygon(0 0, 100% 100%, 0 100%);
+}
+
+a {
+    color: #fff;
+    padding: 10px;
+    background-color: inherit;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%) rotate(45deg);
+    width: 230px;
+    height: 230px;
+    line-height: 1.5em;
+    font-weight: bold;
+    font-size: 2em;
     border: 3px solid #fff;
+    border-radius: 50%;
+    text-align: center;
     display: flex;
+    align-items: center;
+    transition: all .5s;
+    box-shadow: 0px 0px 50px rgb(47, 108, 180);
 }
 
 span {
-    margin: auto;
-    font-size: 8em;
+    transform: rotate(-45deg);
+    transition: all .5s;
+}
+
+span.info {
     color: #fff;
+    padding: 15px;
+    position: absolute;
+    border: 3px solid #fff;
     text-align: center;
+    font-weight: bold;
+    font-size: 2em;
+    display: none;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%) rotate(0);
+}
+
+a:hover {
+    transform: translate(-50%, -50%) rotate(0);
+    border-radius: 0;
+}
+
+a:hover span {
+    transform: rotate(0);
+}
+
+a:active span {
+    transform: rotate(-45deg);
+}
+
+@media Screen and (max-width: 980px) {
+    a,
+    span {
+        display: none;
+    }
+    span.info {
+        display: block;
+    }
 }
