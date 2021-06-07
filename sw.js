@@ -4,23 +4,21 @@ const CACHE_NAME = 'v1_cache_programador_web',
     urlsToCache = [
         /*ARCHIVOS O ENLACES A GUARDAR EN LA CACHE*/
         './',
-        './css/style.css',
-        './main.js',
-        './index.html',
+        './css/*.css',
+        './*.js',
+        './*.html',
+        './iconos/*.png'
     ]
 
 //EVENTOS DEL SERVICE WORKER
 
 //durante la fase de instalación, generalmente se almacena en caché los activos estáticos
-self.addEventListener('install', (e) => {
-    console.log('[ServiceWorker] installed')
-    self.skipWaiting();
+self.addEventListener('install', e => {
     e.waitUntil(
         caches.open(CACHE_NAME)
         .then(cache => {
-            console.log('achivos precargados');
-            return cache.addAll(urlsToCache);
-
+            return cache.addAll(urlsToCache)
+                .then(() => self.skipWaiting())
         })
         .catch(err => console.log('Falló registro de cache', err))
     )
