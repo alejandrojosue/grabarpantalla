@@ -35,6 +35,14 @@ function getMobileOperatingSystem() {
     return "desconocido";
 }
 
+
+if (getMobileOperatingSystem() != 'desconocido') {
+    //alert('mi sistema es>>' + getMobileOperatingSystem());
+    detener.classList.add('ocultar');
+    empezar.classList.add('ocultar');
+    document.querySelector('.info').classList.add('mostrar');
+}else{
+    
 if (retornarSO() != 'Sistema Operativo') {
 
     const empezarGrabacion = async() => {
@@ -82,7 +90,7 @@ if (retornarSO() != 'Sistema Operativo') {
     detener.addEventListener('click', () => {
         grabadora.stop()
     });
-
+    
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('./sw.js')
             .then(reg => console.log('Registro de SW exitoso', reg))
@@ -90,9 +98,4 @@ if (retornarSO() != 'Sistema Operativo') {
     }
 }
 
-if (getMobileOperatingSystem() != 'desconocido') {
-    //alert('mi sistema es>>' + getMobileOperatingSystem());
-    detener.classList.add('ocultar');
-    empezar.classList.add('ocultar');
-    document.querySelector('span.info').classList.add('mostrar');
 }
