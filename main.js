@@ -71,8 +71,8 @@ if (retornarSO() != 'Sistema Operativo') {
             .catch(err => console.warn('Error al tratar de registrar el sw', err))
     }
 } else {
-    document.querySelector('a').classList.toggle('ocultar');
-    document.querySelector('span').classList.toggle('ocultar');
+    document.querySelector('a').classList.add('ocultar');
+    document.querySelector('span').classList.add('ocultar');
 
     document.querySelector('.info').classList.toggle('mostrar');
 
