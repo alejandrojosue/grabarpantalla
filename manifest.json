@@ -6,8 +6,8 @@
     "theme_color": "rgb(47, 108, 240)",
     "orientation": "portrait",
     "display": "standalone",
-    "start_url": "/grabarpantalla/",
-    "scope": "/grabarpantalla/",
+    "start_url": "./",
+    "scope": "./",
     "lang": "es-HN",
     "icons": [{
             "src": "./iconos/icono512x512.png",
