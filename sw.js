@@ -4,9 +4,9 @@ const CACHE_NAME = 'v1_cache_programador_web',
     urlsToCache = [
         /*ARCHIVOS O ENLACES A GUARDAR EN LA CACHE*/
         './',
-        './css/*.css',
-        './*.js',
-        './*.html',
+        './css/style.css',
+        './main.js',
+        './index.html',
         './iconos/*.png'
     ]
 
