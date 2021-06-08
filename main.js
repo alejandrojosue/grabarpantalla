@@ -40,7 +40,7 @@ if (getMobileOperatingSystem() != 'desconocido') {
     //alert('mi sistema es>>' + getMobileOperatingSystem());
     detener.classList.add('ocultar');
     empezar.classList.add('ocultar');
-    document.querySelector('.info').classList.add('mostrar');
+    document.querySelector('.info').style.display = 'block';
     alert('serviceWorker' in navigator);
 }else{
     
