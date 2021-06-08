@@ -48,7 +48,7 @@ span {
     transition: all .5s;
 }
 
-span.info {
+.info {
     color: #fff;
     padding: 15px;
     position: absolute;
@@ -81,16 +81,4 @@ a:active span {
 
 .mostrar {
     display: block;
-}
-
-
-/*
-@media Screen and (max-width: 980px) {
-    a,
-    span {
-        display: none;
-    }
-    span.info {
-        display: block;
-    }
 }
