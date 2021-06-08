@@ -41,7 +41,7 @@ if (getMobileOperatingSystem() != 'desconocido') {
     detener.classList.add('ocultar');
     empezar.classList.add('ocultar');
     document.querySelector('.info').style.display = 'block';
-    alert('serviceWorker' in navigator);
+   if('serviceWorker' in navigator);
 }else{
     
 //if (retornarSO() != 'Sistema Operativo') {
