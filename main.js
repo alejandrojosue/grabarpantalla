@@ -14,6 +14,7 @@ function retornarSO() {
     } else if (navInfo.indexOf('mac') != -1) {
         so = 'Macintosh';
     }
+    alert(so);
     return so
 }
 
