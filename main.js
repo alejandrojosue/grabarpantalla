@@ -17,6 +17,24 @@ function retornarSO() {
     return so
 }
 
+function getMobileOperatingSystem() {
+    var userAgent = navigator.userAgent || navigator.vendor || window.opera;
+
+    // Windows Phone debe ir primero porque su UA tambien contiene "Android"
+    if (/windows phone/i.test(userAgent)) {
+        return "Windows Phone";
+    }
+
+    if (/android/i.test(userAgent)) {
+        return "Android";
+    }
+
+    if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+        return "iOS";
+    }
+    return "desconocido";
+}
+
 if (retornarSO() != 'Sistema Operativo') {
 
     const empezarGrabacion = async() => {
@@ -70,31 +88,11 @@ if (retornarSO() != 'Sistema Operativo') {
             .then(reg => console.log('Registro de SW exitoso', reg))
             .catch(err => console.warn('Error al tratar de registrar el sw', err))
     }
-} else {
-    function getMobileOperatingSystem() {
-  var userAgent = navigator.userAgent || navigator.vendor || window.opera;
-
-  // Windows Phone debe ir primero porque su UA tambien contiene "Android"
- if (/windows phone/i.test(userAgent)) {
-    return "Windows Phone";
- }
-
- if (/android/i.test(userAgent)) {
-    return "Android";
 }
 
-     if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
-    return "iOS";
-}
-
-return "desconocido";
-}
-    if (getMobileOperatingSystem()!= 'desconocido') {
-        alert('hola');
-        document.querySelector('a').classList.add('ocultar');
-        document.querySelector('span').classList.add('ocultar');
-        document.querySelector('.info').classList.toggle('mostrar');
-    }
-    
-
+if (getMobileOperatingSystem() != 'desconocido') {
+    //alert('mi sistema es>>' + getMobileOperatingSystem());
+    detener.classList.add('ocultar');
+    empezar.classList.add('ocultar');
+    document.querySelector('span.info').classList.add('mostrar');
 }
