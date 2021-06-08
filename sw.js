@@ -6,8 +6,15 @@ const CACHE_NAME = 'v1_cache_programador_web',
         './',
         './css/style.css',
         './main.js',
-        './index.html',
-        './iconos/*.png'
+        './index.html',        
+        './iconos/16x16.png',
+        './iconos/32x32.png',
+        './iconos/64x64.png',
+        './iconos/128x128.png',
+        './iconos/192x192.png',
+        './iconos/256x256.png',
+        './iconos/384x384.png',
+        './iconos/512x512.png'
     ]
 
 //EVENTOS DEL SERVICE WORKER
