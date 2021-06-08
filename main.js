@@ -14,7 +14,6 @@ function retornarSO() {
     } else if (navInfo.indexOf('mac') != -1) {
         so = 'Macintosh';
     }
-    alert(so);
     return so
 }
 
@@ -72,9 +71,12 @@ if (retornarSO() != 'Sistema Operativo') {
             .catch(err => console.warn('Error al tratar de registrar el sw', err))
     }
 } else {
-    document.querySelector('a').classList.add('ocultar');
-    document.querySelector('span').classList.add('ocultar');
-
-    document.querySelector('.info').classList.toggle('mostrar');
+     var userAgent = navigator.userAgent || navigator.vendor || window.opera;
+    if (/windows phone/i.test(userAgent) || /android/i.test(userAgent) || /iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+        document.querySelector('a').classList.add('ocultar');
+        document.querySelector('span').classList.add('ocultar');
+        document.querySelector('.info').classList.toggle('mostrar');
+    }
+    
 
 }
