@@ -71,8 +71,26 @@ if (retornarSO() != 'Sistema Operativo') {
             .catch(err => console.warn('Error al tratar de registrar el sw', err))
     }
 } else {
-     var userAgent = navigator.userAgent || navigator.vendor || window.opera;
-    if (/windows phone/i.test(userAgent) || /android/i.test(userAgent) || /iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+    function getMobileOperatingSystem() {
+  var userAgent = navigator.userAgent || navigator.vendor || window.opera;
+
+  // Windows Phone debe ir primero porque su UA tambien contiene "Android"
+ if (/windows phone/i.test(userAgent)) {
+    return "Windows Phone";
+ }
+
+ if (/android/i.test(userAgent)) {
+    return "Android";
+}
+
+     if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+    return "iOS";
+}
+
+return "desconocido";
+}
+    if (getMobileOperatingSystem()!= 'desconocido') {
+        alert('hola');
         document.querySelector('a').classList.add('ocultar');
         document.querySelector('span').classList.add('ocultar');
         document.querySelector('.info').classList.toggle('mostrar');
