@@ -91,7 +91,7 @@ if (getMobileOperatingSystem() != 'desconocido') {
     detener.addEventListener('click', () => {
         grabadora.stop()
     });
-    alert('serviceWorker' in navigator);
+    
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('./sw.js')
             .then(reg => console.log('Registro de SW exitoso', reg))
