@@ -1,76 +1,130 @@
-;
-//asignar un nombre y version del cache
-const CACHE_NAME = 'v1_cache_programador_web',
-    urlsToCache = [
-        /*ARCHIVOS O ENLACES A GUARDAR EN LA CACHE*/
+var cdn = {
+    unpkg: 'https://unpkg.com',
+    max: 'https://maxcdn.bootstrapcdn.com'
+}
+
+var vendor = {
+    bootstrap: 'https://unpkg.com/bootstrap@4.0.0-alpha.2',
+    fontAwesome: 'https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3',
+    raven: 'https://unpkg.com/raven-js@3.7.0'
+};
+
+var URLS = {
+    app: [
         './',
         './css/style.css',
         './main.js',
-        './index.html',        
-        './iconos/16x16.png',
-        './iconos/32x32.png',
-        './iconos/64x64.png',
-        './iconos/128x128.png',
-        './iconos/192x192.png',
-        './iconos/256x256.png',
-        './iconos/384x384.png',
-        './iconos/512x512.png'
+        './index.html',
+        './manifest.json',
+        './iconos/icono16x16.png',
+        './iconos/icono32x32.png',
+        './iconos/icono64x64.png',
+        './iconos/icono128x128.png',
+        './iconos/icono192x192.png',
+        './iconos/icono256x256.png',
+        './iconos/icono384x384.png',
+        './iconos/icono512x512.png'
+    ],
+    vendor: [
+        `${vendor.bootstrap}/dist/css/bootstrap.min.css`,
+        `${vendor.fontAwesome}/css/font-awesome.min.css`,
+        `${vendor.fontAwesome}/fonts/fontawesome-webfont.woff2`, // browsers that support sw support woff2
+        `${vendor.raven}/dist/raven.min.js`
     ]
+}
 
-//EVENTOS DEL SERVICE WORKER
+var CACHE_NAMES = {
+    app: 'app-cache-v5',
+    vendor: 'vendor-cache-v5'
+};
 
-//durante la fase de instalación, generalmente se almacena en caché los activos estáticos
-self.addEventListener('install', e => {
-    e.waitUntil(
-        caches.open(CACHE_NAME)
-        .then(cache => {
-            return cache.addAll(urlsToCache)
-                //.then(() => self.skipWaiting())
-        })
-        .catch(err => console.log('Falló registro de cache', err))
-    )
-})
+function isVendor(url) {
+    return url.startsWith(cdn.unpkg) || url.startsWith(cdn.max);
+}
 
-//una vez que se instala el SW, se activa y busca los recursos para hacer que funcione sin conexión
+function cacheAll(cacheName, urls) {
+    return caches.open(cacheName).then((cache) => cache.addAll(urls));
+}
 
-self.addEventListener('activate', e => {
-    const cacheWhitelist = [CACHE_NAME]
+function addToCache(cacheName, request, response) {
+    if (response.ok) {
+        var clone = response.clone()
+        caches.open(cacheName).then((cache) => cache.put(request, clone));
+    }
+    return response;
+}
 
-    e.waitUntil(
-        caches.keys()
-        .then(cacheNames => {
-            return Promise.all(
-                cacheNames.map(cacheName => {
-                    //Eliminamos lo que ya no se necesita en cache
-                    if (cacheWhitelist.indexOf(cacheName) === -1) {
-                        return caches.delete(cacheName)
-                    }
-                })
-            )
-        })
-        // Le indica al SW activar el cache actual
-        .then(() => self.clients.claim())
-    )
-})
-
-//cuando el navegador recupera una url
-self.addEventListener('fetch', e => {
-    //Responder ya sea con el objeto en caché o continuar y buscar la url real
-    e.respondWith(
-        //caches.match(e.request)
-        fetch(e.request)
-        .catch(() => {
-            return caches.open(CACHE_NAME).then(cache => {
-                return caches.match(e.request);
-            })
-        })
-        /*.then(res => {
-        if (res) {
-            //recuperar del cache
-            return res;
+function lookupCache(request) {
+    return caches.match(request).then(function(cachedResponse) {
+        if (!cachedResponse) {
+            throw Error(`${request.url} not found in cache`);
         }
-        //recuperar de la petición a la url
-        return fetch(e.request);
-})*/
-    )
-})
+        return cachedResponse;
+    });
+}
+
+function fetchThenCache(request, cacheName) {
+    var fetchRequest = fetch(request);
+    // add to cache, but don't block resolve of this promise on caching
+    fetchRequest.then((response) => addToCache(cacheName, request, response));
+    return fetchRequest;
+}
+
+function raceRequest(request, cacheName) {
+    var attempts = [
+        fetchThenCache(request, cacheName),
+        lookupCache(request)
+    ];
+    return new Promise(function(resolve, reject) {
+        // resolve this promise once one resolves
+        attempts.forEach((attempt) => attempt.then(resolve));
+        // reject if all promises reject
+        attempts.reduce((verdict, attempt) => verdict.catch(() => attempt))
+            .catch(() => reject(Error('Unable to resolve request from network or cache.')));
+    })
+}
+
+function cleanupCache() {
+    var validKeys = Object.keys(CACHE_NAMES).map((key) => CACHE_NAMES[key]);
+    return caches.keys().then((localKeys) => Promise.all(
+        localKeys.map((key) => {
+            if (validKeys.indexOf(key) === -1) { // key no longer in our list
+                return caches.delete(key);
+            }
+        })
+    ));
+}
+
+self.addEventListener('install', function(evt) {
+    var cachingCompleted = Promise.all([
+        cacheAll(CACHE_NAMES.app, URLS.app),
+        cacheAll(CACHE_NAMES.vendor, URLS.vendor)
+    ]).then(() => self.skipWaiting())
+
+    evt.waitUntil(cachingCompleted);
+});
+
+self.addEventListener('activate', function(evt) {
+    evt.waitUntil(Promise.all([
+        cleanupCache(),
+        self.clients.claim() // claim immediately so the page can be controlled by the sw immediately
+    ]));
+});
+
+self.addEventListener('fetch', function(evt) {
+    var request = evt.request;
+    var response;
+
+    // only handle GET requests
+    if (request.method !== 'GET') return;
+
+    if (isVendor(request.url)) {
+        // vendor requests: check cache first, fallback to fetch
+        response = lookupCache(request)
+            .catch(() => fetchThenCache(request, CACHE_NAMES.vendor));
+    } else {
+        // app request: race cache/fetch (bonus: update in background)
+        response = raceRequest(request, CACHE_NAMES.app);
+    }
+    evt.respondWith(response);
+});
