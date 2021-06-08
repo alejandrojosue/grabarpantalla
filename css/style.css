@@ -75,6 +75,16 @@ a:active span {
     transform: rotate(-45deg);
 }
 
+.ocultar {
+    display: none;
+}
+
+.mostrar {
+    display: block;
+}
+
+
+/*
 @media Screen and (max-width: 980px) {
     a,
     span {
