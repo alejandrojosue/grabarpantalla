@@ -18,15 +18,15 @@ self.addEventListener('install', e => {
         caches.open(CACHE_NAME)
         .then(cache => {
             return cache.addAll(urlsToCache)
-                //.then(() => self.skipWaiting())
-                .then(() => self.clients.claim())
+                .then(() => self.skipWaiting())
+                //.then(() => self.clients.claim())
         })
         .catch(err => console.log('Falló registro de cache', err))
     )
 })
 
 //una vez que se instala el SW, se activa y busca los recursos para hacer que funcione sin conexión
-/*self.addEventListener('activate', e => {
+self.addEventListener('activate', e => {
     const cacheWhitelist = [CACHE_NAME]
 
     e.waitUntil(
@@ -44,7 +44,7 @@ self.addEventListener('install', e => {
         // Le indica al SW activar el cache actual
         .then(() => self.clients.claim())
     )
-})*/
+})
 
 //cuando el navegador recupera una url
 self.addEventListener('fetch', e => {
