@@ -43,7 +43,7 @@ if (getMobileOperatingSystem() != 'desconocido') {
     document.querySelector('.info').classList.add('mostrar');
 }else{
     
-if (retornarSO() != 'Sistema Operativo') {
+//if (retornarSO() != 'Sistema Operativo') {
 
     const empezarGrabacion = async() => {
 
@@ -96,6 +96,6 @@ if (retornarSO() != 'Sistema Operativo') {
             .then(reg => console.log('Registro de SW exitoso', reg))
             .catch(err => console.warn('Error al tratar de registrar el sw', err))
     }
-}
+//}
 
 }
