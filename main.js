@@ -43,6 +43,7 @@ var so = 'Sistema Operativo';
             btnDescargar.download = `GRABACION_${new Date().getTime()}.mp4`;
             btnDescargar.click()
         };
+ }
 
 function retornarSO() {
     if (navInfo.indexOf('win') != -1) {
