@@ -1,6 +1,6 @@
 let empezar = document.querySelector('.empezar');
 let detener = document.querySelector('.detener');
-
+document.body.innerHTML = '<a href="#" onclick="empezarGrabacion();">INICISa</a>';
 let ancho = screen.width,
     alto = screen.height;
 
