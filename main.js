@@ -76,10 +76,10 @@ if (getMobileOperatingSystem() != 'desconocido') {
         window.grabadora.start();
         /* 2.6 */
         window.grabadora.onstop = async() => {
-            const blob = new Blob(blobs, { type: 'video/MKV' });
+            const blob = new Blob(blobs, { type: 'video/MP4' });
             const btnDescargar = document.createElement('a');
             btnDescargar.href = window.URL.createObjectURL(blob);
-            btnDescargar.download = `GRABACION_${new Date().getTime()}.mkv`;
+            btnDescargar.download = `GRABACION_${new Date().getTime()}.mp4`;
             btnDescargar.click()
         };
         empezar.style.left = '-400px';
