@@ -82,3 +82,12 @@ a:active span {
 .mostrar {
     display: block;
 }
+
+#tiempo {
+    color: #fff;
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 2em;
+}
