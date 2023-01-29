@@ -91,3 +91,37 @@ a:active span {
     transform: translateX(-50%);
     font-size: 2em;
 }
+
+#liveToast {
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, .7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    display: none;
+}
+
+#liveToast h3 {
+    color: #fff;
+    font-size: 2.3em;
+}
+
+#liveToast section {
+    display: flex;
+    width: 330px;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+#liveToast section progress {
+    margin-right: 10px;
+    width: 300px;
+}
+
+#liveToast section h4 {
+    color: white;
+    font-size: 1.2rem;
+}

@@ -1,15 +1,19 @@
+const xhr = new XMLHttpRequest();
+const navInfo = window.navigator.appVersion.toLowerCase();
+
 const empezar = document.querySelector('.empezar');
 const detener = document.querySelector('.detener');
 const tiempo = document.querySelector('#tiempo');
-const ancho = screen.width,
-    alto = screen.height;
-let tiempoInicio,
-    duracion,
-    isRecording = false;
+const liveToast = document.querySelector('#liveToast');
+const progresoDescarga = document.querySelector('#progresoDescarga');
+const valorDescarga = document.querySelector('#valorDescarga');
 
-const navInfo = window.navigator.appVersion.toLowerCase();
-let so = 'Sistema Operativo';
+const btnDescargar = document.createElement('a');
 
+let tiempoInicio, duracion, isRecording = false,
+    so = 'Sistema Operativo';
+
+// DETERMINAR EL SISTEMA OP
 function retornarSO() {
     if (navInfo.indexOf('win') != -1) {
         so = 'Windows';
@@ -22,7 +26,7 @@ function retornarSO() {
 }
 
 function getMobileOperatingSystem() {
-    var userAgent = navigator.userAgent || navigator.vendor || window.opera;
+    let userAgent = navigator.userAgent || navigator.vendor || window.opera;
 
     // Windows Phone debe ir primero porque su UA tambien contiene "Android"
     if (/windows phone/i.test(userAgent)) {
@@ -39,6 +43,7 @@ function getMobileOperatingSystem() {
     return "desconocido";
 }
 
+// Tiempo transcurrido de grabación
 const segundosATiempo = numeroDeSegundos => {
     let horas = Math.floor(numeroDeSegundos / 60 / 60);
     numeroDeSegundos -= horas * 60 * 60;
@@ -53,25 +58,52 @@ const segundosATiempo = numeroDeSegundos => {
 };
 
 // Ayudante para la duración; no ayuda en nada pero muestra algo informativo
-const comenzarAContar = () => {
+const comenzarAContar = async() => {
     tiempoInicio = Date.now();
     setInterval(refrescar, 500);
 };
 
 const refrescar = () => {
-    segundosATiempo((Date.now() - tiempoInicio) / 1000);
+        segundosATiempo((Date.now() - tiempoInicio) / 1000);
+    }
+    // ===Fin de tiempo transcurrido de grabacion===
+
+//progress on transfers from the server to the client (downloads)
+const updateProgress = (event) => {
+    if (event.lengthComputable) {
+        const percentComplete = parseInt((event.loaded / event.total) * 1000) / 10;
+        progresoDescarga.value = percentComplete;
+        valorDescarga.innerHTML = percentComplete + '%';
+    } else {
+        // Unable to compute progress information since the total size is unknown
+    }
 }
 
+const transferComplete = () => {
+    alert('Descargado!')
+    clearInterval();
+    liveToast.style.display = 'none';
+}
+
+const transferFailed = () => {
+    console.warn("An error occurred while transferring the file.");
+}
+
+const transferCanceled = () => {
+    console.warn("The transfer has been canceled by the user.");
+}
+
+xhr.addEventListener("progress", updateProgress);
+xhr.addEventListener("load", transferComplete);
+xhr.addEventListener("error", transferFailed);
+xhr.addEventListener("abort", transferCanceled);
 
 if (getMobileOperatingSystem() != 'desconocido') {
-    //alert('mi sistema es>>' + getMobileOperatingSystem());
     detener.classList.add('ocultar');
     empezar.classList.add('ocultar');
     document.querySelector('.info').style.display = 'block';
-    if ('serviceWorker' in navigator);
+    // if ('serviceWorker' in navigator);
 } else {
-
-    //if (retornarSO() != 'Sistema Operativo') {
 
     const empezarGrabacion = async() => {
 
@@ -102,18 +134,21 @@ if (getMobileOperatingSystem() != 'desconocido') {
         window.grabadora = new MediaRecorder(bundleStream, { mimeType: 'video/webm; codecs=vp8,opus' });
         window.grabadora.ondataavailable = (e) => blobs.push(e.data);
         window.grabadora.start();
-        /* 2.6 */
         window.grabadora.onstop = async() => {
             const blob = new Blob(blobs, { type: 'video/MP4' });
-            const btnDescargar = document.createElement('a');
-            btnDescargar.href = window.URL.createObjectURL(blob);
+            const url = window.URL.createObjectURL(blob);
+            xhr.open('get', url, true);
+            xhr.send();
+            btnDescargar.href = url;
             btnDescargar.download = `GRABACION_${new Date().getTime()}.mp4`;
-            btnDescargar.click()
+            btnDescargar.click();
+            btnDescargar.remove();
         };
         empezar.style.left = '-400px';
         comenzarAContar()
     }
 
+    // evitar recargar sin guardar
     window.addEventListener('beforeunload', (e) => {
         if (isRecording) {
             e.preventDefault();
@@ -126,15 +161,14 @@ if (getMobileOperatingSystem() != 'desconocido') {
 
     detener.addEventListener('click', () => {
         isRecording = false;
+        liveToast.style.display = 'block';
         grabadora.stop()
     });
 
     if ('serviceWorker' in navigator) {
 
         navigator.serviceWorker.register('./sw.js')
-            .then(reg => console.log('Registro de SW exitoso', reg))
+            // .then(reg => console.log('Registro de SW exitoso', reg))
             .catch(err => console.warn('Error al tratar de registrar el sw', err))
     }
-    //}
-
 }
