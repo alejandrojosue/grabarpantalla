@@ -13,6 +13,7 @@ var URLS = {
     app: [
         './',
         './css/style.css',
+        './js/animationBody.js',
         './main.js',
         './index.html',
         './manifest.json',
@@ -55,7 +56,7 @@ function addToCache(cacheName, request, response) {
 }
 
 function lookupCache(request) {
-    return caches.match(request).then(function(cachedResponse) {
+    return caches.match(request).then(function (cachedResponse) {
         if (!cachedResponse) {
             throw Error(`${request.url} not found in cache`);
         }
@@ -75,7 +76,7 @@ function raceRequest(request, cacheName) {
         fetchThenCache(request, cacheName),
         lookupCache(request)
     ];
-    return new Promise(function(resolve, reject) {
+    return new Promise(function (resolve, reject) {
         // resolve this promise once one resolves
         attempts.forEach((attempt) => attempt.then(resolve));
         // reject if all promises reject
@@ -95,7 +96,7 @@ function cleanupCache() {
     ));
 }
 
-self.addEventListener('install', function(evt) {
+self.addEventListener('install', function (evt) {
     var cachingCompleted = Promise.all([
         cacheAll(CACHE_NAMES.app, URLS.app),
         cacheAll(CACHE_NAMES.vendor, URLS.vendor)
@@ -104,14 +105,14 @@ self.addEventListener('install', function(evt) {
     evt.waitUntil(cachingCompleted);
 });
 
-self.addEventListener('activate', function(evt) {
+self.addEventListener('activate', function (evt) {
     evt.waitUntil(Promise.all([
         cleanupCache(),
         self.clients.claim() // claim immediately so the page can be controlled by the sw immediately
     ]));
 });
 
-self.addEventListener('fetch', function(evt) {
+self.addEventListener('fetch', function (evt) {
     var request = evt.request;
     var response;
 
