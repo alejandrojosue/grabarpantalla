@@ -24,7 +24,7 @@ La aplicación Pip Screen Recorder está diseñada para funcionar en computadora
 
 1. Abre la página [Pip](https://alejandrojosue.github.io/grabarpantalla/).
 2. Haz click en el icono que se encuentra en la parte superior al lado de la barra de navegación:
-   ![Captura](https://github.com/alejandrojosue/grabarpantalla/assets/67884952/1c8877c1-4b99-4091-ac66-c1498597021e).
+- ![Captura](https://github.com/alejandrojosue/grabarpantalla/assets/67884952/1c8877c1-4b99-4091-ac66-c1498597021e).
 3. Presiona instalar.
 
 ## Uso
